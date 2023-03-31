@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <div class="chatbox">
+      <div class="header">Chatbot</div>
+      <div class="conversation"></div>
+      <div class="input-container">
+        <input type="text" id="msg" placeholder="Type your message...">
+        <button type="button" onclick="send()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      function send() {
+        var msg = document.getElementById("msg").value;
+        document.getElementById("msg").value = "";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/get-response?msg=" + msg, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            var response = xhr.responseText;
+            var conversation = document.querySelector(".conversation");
+            var bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.innerHTML = "<span class='user'>You:</span> " + msg + "<br><span class='bot'>Chatbot:</span> " + response;
+            conversation.appendChild(bubble);
+            conversation.scrollTop = conversation.scrollHeight;
+          }
+        };
+        xhr.send();
+      }
+    </script>
+  </body>
+</html>
